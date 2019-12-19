@@ -29,8 +29,8 @@ class NeuralNetwork:
         output_error = self.loss.loss(y.reshape(-1, 1), output)
         hidden_error = self._weights_HO.T @ output_error
 
-        delta_output = self._output_activation.vectGrad(output)
-        delta_hidden_output = self._hidden_activation.vectGrad(hidden_output)
+        delta_output = self._output_activation.grad(output)
+        delta_hidden_output = self._hidden_activation.grad(hidden_output)
 
         self._bias_IH += ((self._learning_rate * hidden_error) * delta_hidden_output)
         self._bias_HO += ((self._learning_rate * output_error) * delta_output)
@@ -41,12 +41,12 @@ class NeuralNetwork:
     def _hidden_output(self, X: Tensor = None) -> Tensor:
         assert X.ndim == 2, Exception("X must be a row vector")
         X = X.reshape(-1, 1)
-        predict_IH = self._hidden_activation.vectFunc(self._weights_IH @ X + self._bias_IH)
+        predict_IH = self._hidden_activation.func(self._weights_IH @ X + self._bias_IH)
         return predict_IH
 
     def predict(self, X: Tensor = None) -> Tensor:
         assert X.ndim == 2, Exception("X must be a row vector")
         X = X.reshape(-1, 1)
-        predict_IH = self._hidden_activation.vectFunc(self._weights_IH @ X + self._bias_IH)
-        predict_HO = self._output_activation.vectFunc(self._weights_HO @ predict_IH + self._bias_HO)
+        predict_IH = self._hidden_activation.func(self._weights_IH @ X + self._bias_IH)
+        predict_HO = self._output_activation.func(self._weights_HO @ predict_IH + self._bias_HO)
         return predict_HO
