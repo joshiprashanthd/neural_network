@@ -53,13 +53,21 @@ class ReLu(Activation):
     """
     
     @staticmethod
+    def _max(x: float) -> float:
+        if x < 0:
+            return 0
+        else:
+            return x 
+    
+    @staticmethod
     def func(X: Tensor) -> Tensor:
-        return np.max(0, X)
+        return np.vectorize(ReLu._max)(X)
     
     @staticmethod
     def grad(X: Tensor) -> Tensor:
         copy_X = X.copy()
         copy_X[copy_X < 0] = 0
+        copy_X[copy_X != 0] = 1
         return copy_X
 
 
