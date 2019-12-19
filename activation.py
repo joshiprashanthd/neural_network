@@ -12,19 +12,11 @@ class Activation:
     """
 
     @staticmethod
-    def func(X: float) -> float:
+    def func(X: Tensor) -> Tensor:
         raise NotImplementedError
 
     @staticmethod
-    def vectFunc(X: Tensor) -> Tensor:
-        raise NotImplementedError
-
-    @staticmethod
-    def grad(X: float) -> float:
-        raise NotImplementedError
-
-    @staticmethod
-    def vectGrad(X: Tensor) -> Tensor:
+    def grad(X: Tensor) -> Tensor:
         raise NotImplementedError
 
 
@@ -34,21 +26,12 @@ class Sigmoid(Activation):
     """
 
     @staticmethod
-    def func(X: float) -> float:
+    def func(X: Tensor) -> Tensor:
         return 1 / (1 + np.exp(-X))
 
     @staticmethod
-    def vectFunc(X: Tensor) -> Tensor:
-        vectorize_func = np.vectorize(Sigmoid.func)
-        return vectorize_func(X)
-
-    @staticmethod
-    def grad(X: float) -> float:
-        return Sigmoid.func(X) * (1 - Sigmoid.func(X))
-
-    @staticmethod
     def vectGrad(X: Tensor) -> Tensor:
-        return np.vectorize(Sigmoid.grad)(X)
+        return Sigmoid.func(X) * (1 - Sigmoid.func(X))
 
 
 class Tanh(Activation):
@@ -56,38 +39,35 @@ class Tanh(Activation):
     Represents a Hyperbolic Tangent Activation Function
     """
 
-
     @staticmethod
-    def func(X: float) -> float:
-        return (np.exp(X) - np.exp(-X)) / (np.exp(X) + np.exp(-X))
-
-    @staticmethod
-    def vectFunc(X: Tensor) -> Tensor:
-        vectorize_func = np.vectorize(Tanh.func)
-        return vectorize_func(X)
-
-    @staticmethod
-    def grad(X: float) -> float:
-        return 1 - (Tanh.func(X)) ** 2
+    def func(X: Tensor) -> Tensor:
+        return np.tanh(X)
 
     @staticmethod
     def vectGrad(X: Tensor) -> Tensor:
-        return np.vectorize(Tanh.grad)(X)
+        return 1 - (np.tanh(X) ** 2)
+
+class ReLu(Activation):
+    """
+    A ReLu (Rectified Linear Units) transform every element to the result of max(0, x)
+    """
+    
+    @staticmethod
+    def func(X: Tensor) -> Tensor:
+        return np.max(0, X)
+    
+    @staticmethod
+    def grad(X: Tensor) -> Tensor:
+        copy_X = X.copy()
+        copy_X[copy_X < 0] = 0
+        return copy_X
 
 
 class Identity(Activation):
     @staticmethod
-    def func(X: float) -> float:
+    def func(X: Tensor) -> Tensor:
         return X
-
-    @staticmethod
-    def vectFunc(X: Tensor) -> Tensor:
-        return X
-
-    @staticmethod
-    def grad(X: float) -> float:
-        return 1
 
     @staticmethod
     def vectGrad(X: Tensor) -> Tensor:
-        return np.vectorize(Identity.grad)(X)
+        return np.ones(X.shape, dtype=X.dtype)
