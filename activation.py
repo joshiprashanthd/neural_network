@@ -64,10 +64,11 @@ class ReLu(Activation):
 
 
 class Identity(Activation):
+    
     @staticmethod
     def func(X: Tensor) -> Tensor:
         return X
 
     @staticmethod
-    def vectGrad(X: Tensor) -> Tensor:
+    def grad(X: Tensor) -> Tensor:
         return np.ones(X.shape, dtype=X.dtype)
