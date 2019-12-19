@@ -30,7 +30,7 @@ class Sigmoid(Activation):
         return 1 / (1 + np.exp(-X))
 
     @staticmethod
-    def vectGrad(X: Tensor) -> Tensor:
+    def grad(X: Tensor) -> Tensor:
         return Sigmoid.func(X) * (1 - Sigmoid.func(X))
 
 
@@ -44,7 +44,7 @@ class Tanh(Activation):
         return np.tanh(X)
 
     @staticmethod
-    def vectGrad(X: Tensor) -> Tensor:
+    def grad(X: Tensor) -> Tensor:
         return 1 - (np.tanh(X) ** 2)
 
 class ReLu(Activation):
