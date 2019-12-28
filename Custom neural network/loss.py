@@ -28,7 +28,7 @@ class Loss:
 class MSE(Loss):
     @staticmethod
     def loss(target: Tensor, predicted: Tensor) -> Tensor:
-        print("LOSS: \n", (target - predicted) ** 2)
+        # print("LOSS: \n", (target - predicted) ** 2)
         return (target - predicted) ** 2
 
     @staticmethod
