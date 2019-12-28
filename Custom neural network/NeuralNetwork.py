@@ -30,10 +30,12 @@ class NeuralNetwork:
         hidden_error = self._weights_HO.T @ output_error
 
         delta_output = self._output_activation.grad(output)
+        # print("delta output: ", delta_output)
+        # print("output_error: ", output_error)
         delta_hidden_output = self._hidden_activation.grad(hidden_output)
 
         self._bias_IH += ((self._learning_rate * hidden_error) * delta_hidden_output)
-        self._bias_HO += ((self._learning_rate * output_error) * delta_output)
+        # self._bias_HO += ((self._learning_rate * output_error) * delta_output)
 
         self._weights_IH += ((self._learning_rate * hidden_error) * delta_hidden_output) @ X
         self._weights_HO += ((self._learning_rate * output_error) * delta_output) @ hidden_output.T
