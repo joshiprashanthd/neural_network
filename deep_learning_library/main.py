@@ -15,12 +15,13 @@ y = np.array([0, 1, 1, 0]).reshape((4, 1, 1))
 if __name__ == "__main__":
 
     network = models.Sequential()
-    network.add(layers.Dense(3, activation=activations.ReLu(), input_shape=(2, 1)))
+    network.add(layers.Dense(3, activation=activations.Tanh(), input_shape=(2, 1)))
+    network.add(layers.Dropout(0.5))
     network.add(layers.Dense(1, activation=activations.Sigmoid()))
 
-    network.compile(loss=loss.MSE(), optimizer=optimizers.SGD(lr=0.1))
+    network.compile(loss=loss.MSE(), optimizer=optimizers.SGD(lr=0.5))
 
-    network.fit(X, y, epochs=1000, batch_size=4)
+    network.fit(X, y, epochs=5000, batch_size=4)
 
     y_pred = network.predict(X)
 
