@@ -15,7 +15,7 @@ y = np.array([[0, 1, 0], [0, 0, 1], [1, 0, 0]])
 
 if __name__ == "__main__":
     nn = NeuralNetwork(input_units=3, hidden_units=4, output_units=3,
-                       hidden_activation=Tanh, output_activation=Softmax, learning_rate=0.1)
+                       hidden_activation=ReLu, output_activation=Softmax, learning_rate=0.1)
 
     epochs = 1000
     print("Initial Prediction")
