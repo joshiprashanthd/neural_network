@@ -99,6 +99,6 @@ class Dropout(Layer):
 
     def backward(self, error: Tensor) -> Tensor:
         return error
-
+    
     def raw_output(self) -> Tensor:
         return self.inputs
