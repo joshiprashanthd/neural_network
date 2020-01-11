@@ -2,6 +2,7 @@ from tensor import Tensor
 from typing import Dict, Iterable
 from activations import Activation
 import numpy as np
+import activations
 
 
 class Layer:
@@ -73,3 +74,31 @@ class Dense(Layer):
 
         self.raw_outputs = self.params['w'] @ self.inputs + self.params['b']
         return self.raw_outputs
+
+class Dropout(Layer):
+
+    def __init__(self, fraction: float, input_shape: tuple = None):
+        super().__init__()
+        assert (0 <= fraction < 1), Exception("Fraction should be in range [0, 1)")
+
+        self.fraction = fraction
+        self.input_shape = input_shape
+        self.output_size = None
+
+    def set_input_shape(self, input_size: int) -> None:
+        self.input_shape = (input_size, 1)
+        self.output_size = input_size
+
+    def forward(self, inputs: Tensor) -> Tensor:
+        self.inputs = inputs
+        size = self.input_shape[0]  # counting number of columns
+        indexes = [np.random.choice(np.arange(size), p=activations.Softmax().func(np.random.rand(size))) for _ in
+                   range(np.math.floor(self.fraction * size))]
+        self.inputs[:, indexes] = 0
+        return self.inputs
+
+    def backward(self, error: Tensor) -> Tensor:
+        return error
+
+    def raw_output(self) -> Tensor:
+        return self.inputs
