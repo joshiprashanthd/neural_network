@@ -47,8 +47,8 @@ class Dense(Layer):
 
     def init_param(self):
         self.params = {
-            'w': np.random.uniform(size=(self.output_size, self.input_shape[0])),
-            'b': np.random.uniform(size=(self.output_size, 1))
+            'w': np.random.randn(self.output_size, self.input_shape[0]) * np.sqrt(1/self.input_shape[0]),
+            'b': np.random.randn(self.output_size, 1) * np.sqrt(1/self.input_shape[0])
         }
 
     def forward(self, inputs: Tensor) -> Tensor:
@@ -84,6 +84,7 @@ class Dropout(Layer):
         self.fraction = fraction
         self.input_shape = input_shape
         self.output_size = None
+        self.raw_outputs = None
 
     def set_input_shape(self, input_size: int) -> None:
         self.input_shape = (input_size, 1)
@@ -91,14 +92,20 @@ class Dropout(Layer):
 
     def forward(self, inputs: Tensor) -> Tensor:
         self.inputs = inputs
-        size = self.input_shape[0]  # counting number of columns
-        indexes = [np.random.choice(np.arange(size), p=activations.Softmax().func(np.random.rand(size))) for _ in
-                   range(np.math.floor(self.fraction * size))]
-        self.inputs[:, indexes] = 0
+        
+        self.raw_output()
+        
+        keep_prob = 1 - self.fraction
+        
+        d = np.random.rand(self.inputs.shape[1], self.inputs.shape[2]) < keep_prob
+        self.inputs *= d
+        self.inputs /= keep_prob
+        
         return self.inputs
 
     def backward(self, error: Tensor) -> Tensor:
         return error
     
     def raw_output(self) -> Tensor:
+        self.raw_outputs = self.inputs
         return self.inputs
