@@ -15,11 +15,11 @@ y = np.array([0, 1, 1, 0]).reshape((4, 1, 1))
 if __name__ == "__main__":
     
     model = models.Sequential()
-    model.add(layers.Dense(2, activation = activations.ReLu(), input_shape=(2, 1)))
-    # model.add(layers.Dropout(0.4))
+    model.add(layers.Dense(2, activation = activations.Tanh(), input_shape=(2, 1)))
+    # model.add(layers.Dropout(0.01))
     model.add(layers.Dense(1, activation=activations.Sigmoid()))
     
-    model.compile(loss=loss.MSE(), optimizer=optimizers.SGD(lr=0.1))
+    model.compile(loss=loss.MSE(), optimizer=optimizers.SGD(lr=0.1, momentum=0.9))
     
     print("Initial Prediction: ")
     print(model.predict(X))

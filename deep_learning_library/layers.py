@@ -13,6 +13,7 @@ class Layer:
         self.input_shape = None
         self.inputs = None
         self.activation = None
+        self.raw_outputs = None
 
     def set_input_shape(self, input_size: int) -> None:
         raise NotImplementedError
@@ -28,7 +29,7 @@ class Layer:
 
 
 class Dense(Layer):
-    def __init__(self, output_size: int = None, activation: Activation = None, input_shape: tuple = None) -> None:
+    def __init__(self, output_size: int = None, activation: Activation = None, input_shape: tuple = None, weight_init_method: str = "uniform") -> None:
         super().__init__()
         assert (output_size is not None), Exception("Output size is not defined")
         assert (activation is not None), Exception("Activation is not defined")
@@ -38,6 +39,7 @@ class Dense(Layer):
         self.output_size = output_size
         self.activation = activation
         self.input_shape = input_shape
+        self.weight_init_method = weight_init_method
         self.inputs = None
         self.outputs = None
         self.raw_outputs = None
@@ -46,10 +48,21 @@ class Dense(Layer):
             self.init_param()
 
     def init_param(self):
-        self.params = {
-            'w': np.random.randn(self.output_size, self.input_shape[0]) * np.sqrt(1/self.input_shape[0]),
-            'b': np.random.randn(self.output_size, 1) * np.sqrt(1/self.input_shape[0])
-        }
+        if self.weight_init_method is "relu_optimized":
+            self.params = {
+                'w': np.random.randn(self.output_size, self.input_shape[0]) * np.sqrt(1/self.input_shape[0]),
+                'b': np.random.randn(self.output_size, 1) * np.sqrt(1/self.input_shape[0])
+            }
+        elif self.weight_init_method == "uniform":
+            self.params = {
+                'w': np.random.uniform(size=(self.output_size, self.input_shape[0])) * np.sqrt(1/self.input_shape[0]),
+                'b': np.random.uniform(size=(self.output_size, 1)) * np.sqrt(1/self.input_shape[0])
+            }
+        elif self.weight_init_method == "normal":
+            self.params = {
+                'w': np.random.normal(size=(self.output_size, self.input_shape[0])) * np.sqrt(1/self.input_shape[0]),
+                'b': np.random.normal(size=(self.output_size, 1)) * np.sqrt(1/self.input_shape[0])
+            }
 
     def forward(self, inputs: Tensor) -> Tensor:
         self.inputs = inputs
