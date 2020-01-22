@@ -11,6 +11,7 @@ import optimizers
 
 X = np.array([[0, 0], [0, 1], [1, 0], [1, 1]]).reshape((4, 2, 1))
 y = np.array([0, 1, 1, 0]).reshape((4, 1, 1))
+y_hat = np.array([0.4, 0.1, 0.2, 0.8]).reshape((4, 1, 1))
 
 if __name__ == "__main__":
     
@@ -19,7 +20,7 @@ if __name__ == "__main__":
     # model.add(layers.Dropout(0.01))
     model.add(layers.Dense(1, activation=activations.Sigmoid()))
     
-    model.compile(loss=loss.MSE(), optimizer=optimizers.SGD(lr=0.1, momentum=0.9))
+    model.compile(loss=loss.BinaryCrossEntropy(), optimizer=optimizers.SGD(lr=0.1, momentum=0.9))
     
     print("Initial Prediction: ")
     print(model.predict(X))
@@ -28,3 +29,8 @@ if __name__ == "__main__":
     model.fit(X, y, batch_size=4, epochs=1000)
     
     print(model.predict(X))
+    
+
+# bce = loss.BinaryCrossEntropy()
+
+# print(bce.grad(y_hat, y))

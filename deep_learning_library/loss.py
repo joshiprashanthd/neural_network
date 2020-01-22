@@ -34,7 +34,7 @@ class MSE(Loss):
 
 class BinaryCrossEntropy(Loss):
     def loss(self, target: Tensor, predicted: Tensor) -> Tensor:
-        return -np.sum(target * np.log(predicted+0.000001) + (1 - target) * np.log(1 - predicted+0.000001), axis=0) / len(target)
+        return -np.sum(target * np.log(predicted+0.001) + (1 - target) * np.log(1 - predicted+0.001), axis=0) / len(target)
 
     def grad(self, target: Tensor, predicted: Tensor) -> Tensor:
-        return -((target / predicted) + (1 - target) / (1 - predicted)) / len(target)
+        return -((target / (predicted + 0.001)) - (1 - target) / ((1 - predicted) + 0.001)) / len(target)
