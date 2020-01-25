@@ -38,22 +38,19 @@ class BinaryCrossEntropy(Loss):
         self.epsilon = epsilon
     
     def loss(self, target: Tensor, predicted: Tensor) -> Tensor:
-        return -np.sum(target * np.log(predicted + self.epsilon) + (1 - target) * np.log(1 - predicted + self.epsilon), axis=0) / len(target)
+        return -np.sum(target * np.log(predicted + self.epsilon) + (1 - target) * np.log(1 - predicted + self.epsilon)) / len(target)
 
     def grad(self, target: Tensor, predicted: Tensor) -> Tensor:
         return -((target / (predicted + self.epsilon)) - (1 - target) / ((1 - predicted) + self.epsilon)) / len(target)
+
+# class CategoricalCrossEntropy(Loss):
+#     def __init__(self, epsilon: float = 0.01) -> None:
+#         self.epsilon = epsilon
+        
+#     def loss(self, target: Tensor, predicted: Tensor) -> Tensor:
+#         return np.sum(target * np.log(predicted + self.epsilon))
     
-class CategoricalCrossEntropy(Loss):
-    
-    def __init__(self, epsilon: float = 0.001) -> None:
-        self.epsilon = epsilon
-    
-    def loss(self, target: Tensor, predicted: Tensor) -> Tensor:
-        return -np.sum(target * np.log(predicted + self.epsilon))
-    
-    def grad(self, target: Tensor, predicted: Tensor) -> Tensor:
-        # print("PREDICTED: ",predicted)
-        # print("TARGET: ", target)
-        y = -(target / (predicted + self.epsilon)) / len(target)
-        # print("RETURN VALUE: ", y)
-        return y
+#     def grad(self, target: Tensor, predicted: Tensor) -> Tensor:
+#         y = -np.sum(target / (predicted + self.epsilon), axis=1, keepdims=True)
+#         y = np.hstack([y for _ in range(target.shape[1])])
+#         return y
