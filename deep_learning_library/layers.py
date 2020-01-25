@@ -13,7 +13,7 @@ class Layer:
         self.input_shape = None
         self.inputs = None
         self.activation = None
-        self.raw_outputs = None
+        self.logits = None
 
     def set_input_shape(self, input_size: int) -> None:
         raise NotImplementedError
@@ -24,7 +24,7 @@ class Layer:
     def backward(self, error: Tensor) -> Tensor:
         raise NotImplementedError
 
-    def raw_output(self) -> Tensor:
+    def init_logits(self) -> Tensor:
         raise NotImplementedError
 
 
@@ -42,7 +42,7 @@ class Dense(Layer):
         self.weight_init_method = weight_init_method
         self.inputs = None
         self.outputs = None
-        self.raw_outputs = None
+        self.logits = None
 
         if self.input_shape is not None:
             self.init_param()
@@ -72,21 +72,21 @@ class Dense(Layer):
     def backward(self, error: Tensor) -> Tensor:
         assert (self.inputs is not None), Exception("Inputs are not initialized")
 
-        self.raw_output()
+        self.init_logits()
 
-        self.grads['b'] = np.sum(error * self.activation.grad(self.raw_outputs), axis=0)
-        self.grads['w'] = np.sum((error * self.activation.grad(self.raw_outputs)) @ self.inputs.reshape(len(self.inputs), self.inputs.shape[2], self.inputs.shape[1]), axis=0)
+        self.grads['b'] = np.sum(error * self.activation.grad(self.logits), axis=0)
+        self.grads['w'] = np.sum((error * self.activation.grad(self.logits)) @ self.inputs.reshape(len(self.inputs), self.inputs.shape[2], self.inputs.shape[1]), axis=0)
         return self.params['w'].T @ error
 
     def set_input_shape(self, input_size: int) -> None:
         self.input_shape = (input_size, 1)
         self.init_param()
 
-    def raw_output(self) -> Tensor:
+    def init_logits(self) -> Tensor:
         assert (self.inputs is not None), Exception("Inputs are not initialized")
 
-        self.raw_outputs = self.params['w'] @ self.inputs + self.params['b']
-        return self.raw_outputs
+        self.logits = self.params['w'] @ self.inputs + self.params['b']
+        return self.logits
 
 class Dropout(Layer):
 
@@ -97,7 +97,7 @@ class Dropout(Layer):
         self.fraction = fraction
         self.input_shape = input_shape
         self.output_size = None
-        self.raw_outputs = None
+        self.logits = None
 
     def set_input_shape(self, input_size: int) -> None:
         self.input_shape = (input_size, 1)
@@ -106,7 +106,7 @@ class Dropout(Layer):
     def forward(self, inputs: Tensor) -> Tensor:
         self.inputs = inputs
         
-        self.raw_output()
+        self.init_logits()
         
         keep_prob = 1 - self.fraction
         
@@ -119,6 +119,6 @@ class Dropout(Layer):
     def backward(self, error: Tensor) -> Tensor:
         return error
     
-    def raw_output(self) -> Tensor:
-        self.raw_outputs = self.inputs
+    def init_logits(self) -> Tensor:
+        self.logits = self.inputs
         return self.inputs
