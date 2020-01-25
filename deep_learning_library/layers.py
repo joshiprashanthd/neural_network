@@ -73,7 +73,7 @@ class Dense(Layer):
         assert (self.inputs is not None), Exception("Inputs are not initialized")
 
         self.init_logits()
-
+        
         self.grads['b'] = np.sum(error * self.activation.grad(self.logits), axis=0)
         self.grads['w'] = np.sum((error * self.activation.grad(self.logits)) @ self.inputs.reshape(len(self.inputs), self.inputs.shape[2], self.inputs.shape[1]), axis=0)
         return self.params['w'].T @ error
