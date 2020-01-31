@@ -48,19 +48,29 @@ class Dense(Layer):
             self.init_param()
 
     def init_param(self):
-        if self.weight_init_method is "relu_optimized":
+        if self.weight_init_method is "relu":
             self.params = {
-                'w': np.random.randn(self.output_size, self.input_shape[0]) * np.sqrt(1/self.input_shape[0]),
+                'w': np.random.randn(self.output_size, self.input_shape[0]) * np.sqrt(2.0/self.input_shape[0]),
                 'b': np.random.randn(self.output_size, 1) * np.sqrt(1/self.input_shape[0])
             }
         elif self.weight_init_method == "uniform":
             self.params = {
-                'w': np.random.uniform(size=(self.output_size, self.input_shape[0])) * np.sqrt(1/self.input_shape[0]),
+                'w': np.random.uniform(size=(self.output_size, self.input_shape[0])) * np.sqrt(1.0/self.input_shape[0]),
                 'b': np.random.uniform(size=(self.output_size, 1)) * np.sqrt(1/self.input_shape[0])
             }
         elif self.weight_init_method == "normal":
             self.params = {
-                'w': np.random.normal(size=(self.output_size, self.input_shape[0])) * np.sqrt(1/self.input_shape[0]),
+                'w': np.random.normal(size=(self.output_size, self.input_shape[0])) * np.sqrt(1.0/self.input_shape[0]),
+                'b': np.random.normal(size=(self.output_size, 1)) * np.sqrt(1/self.input_shape[0])
+            }
+        elif self.weight_init_method == "xavier":
+            self.params = {
+                'w': np.random.normal(size=(self.output_size, self.input_shape[0])) * np.sqrt(1.0/self.input_shape[0]),
+                'b': np.random.normal(size=(self.output_size, 1)) * np.sqrt(1/self.input_shape[0])
+            }
+        elif self.weight_init_method == "xavier_alt":
+            self.params = {
+                'w': np.random.normal(size=(self.output_size, self.input_shape[0])) * np.sqrt(1.0/(self.input_shape[0] + self.output_size)),
                 'b': np.random.normal(size=(self.output_size, 1)) * np.sqrt(1/self.input_shape[0])
             }
 
