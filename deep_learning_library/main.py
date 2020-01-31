@@ -33,13 +33,13 @@ y_test = y_test.reshape((-1, 3, 1))
 if __name__ == "__main__":
     
     model = models.Sequential()
-    model.add(layers.Dense(16, activation = activations.Tanh(), input_shape=X_train.shape[1:]))
-    model.add(layers.Dense(16, activation=activations.Tanh()))
+    model.add(layers.Dense(16, activation = activations.Tanh(), input_shape=X_train.shape[1:], weight_init_method="xavier"))
+    model.add(layers.Dense(16, activation=activations.Tanh(), weight_init_method="xavier"))
     model.add(layers.Dense(3, activation=activations.Sigmoid()))
     
-    model.compile(loss=loss.MSE(), optimizer=optimizers.SGD(lr=0.1, momentum=0))
-    
-    model.fit(X_train, y_train, batch_size=32, epochs=500, shuffle=True)
+    model.compile(loss=loss.MSE(), optimizer=optimizers.SGD(lr=0.01, momentum=0.9))
+
+    model.fit(X_train, y_train, batch_size=64, epochs=5000, shuffle=False)
 
     print(model.predict(X_test[0:10]))
     print(y_test[:10])
