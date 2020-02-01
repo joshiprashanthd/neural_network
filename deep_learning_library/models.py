@@ -19,7 +19,7 @@ class Sequential:
     def add(self, layer: Layer) -> None:
         self.layers.append(layer)
 
-    def fit(self, inputs: Tensor, targets: Tensor, epochs=5, batch_size=32, shuffle=False) -> None:
+    def fit(self, inputs: Tensor, targets: Tensor, epochs=5, batch_size=32, shuffle=False, verbose=True) -> None:
         assert (inputs.ndim >= 3), Exception("Batch dimension must be provided for inputs")
         assert (targets.ndim >= 3), Exception("Batch dimension must be provided for targets")
         assert (batch_size <= len(inputs)), Exception(
@@ -34,7 +34,8 @@ class Sequential:
                 error = self.loss.grad(batch.targets, predicted)
                 self.backprop(error)
                 self.optimizer.step(self)
-            print("EPOCH {} LOSS: {}".format(epoch, epoch_loss))
+            if verbose: 
+                print("EPOCH {} LOSS: {}".format(epoch, epoch_loss))
 
     def predict(self, inputs: Tensor) -> Tensor:
         assert self.is_compiled, Exception("Models must be compiled before prediction could be done")
@@ -62,6 +63,11 @@ class Sequential:
             input_size = layer.output_size
 
         self.is_compiled = True
+        
+    def evaluate(self, y_true: Tensor, y_pred: Tensor) -> Tuple[float, float]:
+        assert(y_true.shape == y_pred.shape), Exception("Prediction and True valued tensor must have the same dimension")
+        
+        
 
     def backprop(self, error: Tensor) -> Tensor:
         for layer in reversed(self.layers):

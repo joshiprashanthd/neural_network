@@ -12,6 +12,7 @@ import optimizers
 from sklearn.datasets import load_iris
 from sklearn.model_selection import train_test_split
 from tensorflow.keras.utils import to_categorical
+from sklearn.metrics import confusion_matrix
 
 dataset = load_iris()
 
@@ -39,10 +40,17 @@ if __name__ == "__main__":
     
     model.compile(loss=loss.MSE(), optimizer=optimizers.SGD(lr=0.01, momentum=0.9))
 
-    model.fit(X_train, y_train, batch_size=64, epochs=5000, shuffle=False)
+    model.fit(X_train, y_train, batch_size=64, epochs=1500, shuffle=False, verbose=True)
 
-    print(model.predict(X_test[0:10]))
-    print(y_test[:10])
+    y_pred = model.predict(X_test)
+    
+    y_test_alt = np.array([np.argmax(y_test[i]) for i in range(len(y_test))])
+    y_pred_alt = np.array([np.argmax(y_pred[i]) for i in range(len(y_pred))])
+    
+    print("y_test_alt: ", y_test_alt[:10])
+    print("y_pred_alt: ", y_pred_alt[:10])
+    
+    print(confusion_matrix(y_test_alt, y_pred_alt))
 
 # arr = np.array([1, 4, 4, 5]).reshape((-1, 1, 1))
 # print(arr)
