@@ -56,11 +56,15 @@ class Sequential:
 
         # Getting output size of the first layer. This input size is used to determine input shape of subsequent layers
         input_size = self.layers[0].output_size
+        self.layers[0].id = 1
+        i = 2
 
         # Setting input shape of all but first layers
         for layer in self.layers[1:]:
             layer.set_input_shape(input_size)
             input_size = layer.output_size
+            layer.id = i
+            i += 1
 
         self.is_compiled = True
         
