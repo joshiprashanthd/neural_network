@@ -18,7 +18,6 @@ dataset = load_iris()
 
 X = dataset.data.reshape((-1, 4, 1))
 y = dataset.target
-
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
 
 X_train = X_train.reshape((-1, 4, 1))
@@ -34,13 +33,16 @@ y_test = y_test.reshape((-1, 3, 1))
 if __name__ == "__main__":
     
     model = models.Sequential()
-    model.add(layers.Dense(16, activation = activations.Tanh(), input_shape=X_train.shape[1:], weight_init_method="xavier"))
-    model.add(layers.Dense(16, activation=activations.Tanh(), weight_init_method="xavier"))
+    model.add(layers.Dense(16, activation = activations.ReLu(), input_shape=X_train.shape[1:], weight_init_method="relu"))
+    model.add(layers.Dense(16, activation=activations.ReLu(), weight_init_method="relu"))
     model.add(layers.Dense(3, activation=activations.Sigmoid()))
     
-    model.compile(loss=loss.MSE(), optimizer=optimizers.SGD(lr=0.01, momentum=0.9))
+    # model.compile(loss=loss.MSE(), optimizer=optimizers.SGD(lr=0.01, momentum=0.9)) #loss after 1000 epoch: 40.002
+    # model.compile(loss=loss.MSE(), optimizer=optimizers.ADAGRAD()) # loss after 1000 epoch: 6.56
+    # model.compile(loss=loss.MSE(),optimizer=optimizers.RMSPROP()) # loss after 1000 epoch: 6.003
+    model.compile(loss=loss.MSE(), optimizer=optimizers.ADAM()) # loss after 1000 epoch: 4.204
 
-    model.fit(X_train, y_train, batch_size=64, epochs=1500, shuffle=False, verbose=True)
+    model.fit(X_train, y_train, batch_size=80, epochs=1000, shuffle=False, verbose=True)
 
     y_pred = model.predict(X_test)
     
@@ -51,7 +53,3 @@ if __name__ == "__main__":
     print("y_pred_alt: ", y_pred_alt[:10])
     
     print(confusion_matrix(y_test_alt, y_pred_alt))
-
-# arr = np.array([1, 4, 4, 5]).reshape((-1, 1, 1))
-# print(arr)
-# print(np.hstack([arr, arr]))
