@@ -34,6 +34,7 @@ class Dense(Layer):
         assert (output_size is not None), Exception("Output size is not defined")
         assert (activation is not None), Exception("Activation is not defined")
 
+        self.id = None
         self.params: Dict[str, Tensor] = {}
         self.grad: Dict[str, Tensor] = {}
         self.output_size = output_size
