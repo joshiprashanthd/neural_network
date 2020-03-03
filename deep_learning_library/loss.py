@@ -42,15 +42,3 @@ class BinaryCrossEntropy(Loss):
 
     def grad(self, target: Tensor, predicted: Tensor) -> Tensor:
         return -((target / (predicted + self.epsilon)) - (1 - target) / ((1 - predicted) + self.epsilon)) / len(target)
-
-# class CategoricalCrossEntropy(Loss):
-#     def __init__(self, epsilon: float = 0.01) -> None:
-#         self.epsilon = epsilon
-        
-#     def loss(self, target: Tensor, predicted: Tensor) -> Tensor:
-#         return np.sum(target * np.log(predicted + self.epsilon))
-    
-#     def grad(self, target: Tensor, predicted: Tensor) -> Tensor:
-#         y = -np.sum(target / (predicted + self.epsilon), axis=1, keepdims=True)
-#         y = np.hstack([y for _ in range(target.shape[1])])
-#         return y
