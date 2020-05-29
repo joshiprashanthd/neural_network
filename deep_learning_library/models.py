@@ -1,10 +1,10 @@
-from tensor import Tensor
+from deep_learning_library.tensor import Tensor
 import numpy as np
-from layers import Dense, Layer
-from batch_iterator import BatchIterator
-from loss import Loss, MSE, Normal
+from deep_learning_library.layers import Dense, Layer
+from deep_learning_library.batch_iterator import BatchIterator
+from deep_learning_library.loss import Loss, MSE, Normal
 from typing import Iterable, List, Tuple
-from optimizers import Optimizer
+from deep_learning_library.optimizers import Optimizer
 
 
 class Sequential:
@@ -70,8 +70,6 @@ class Sequential:
         
     def evaluate(self, y_true: Tensor, y_pred: Tensor) -> Tuple[float, float]:
         assert(y_true.shape == y_pred.shape), Exception("Prediction and True valued tensor must have the same dimension")
-        
-        
 
     def backprop(self, error: Tensor) -> Tensor:
         for layer in reversed(self.layers):

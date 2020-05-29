@@ -2,12 +2,11 @@
 # Date time: 1-4-2020
 
 import numpy as np
-import layers
-import activations
-import models
-import activations
-import loss
-import optimizers
+import deep_learning_library.layers as layers
+import deep_learning_library.models as models
+import deep_learning_library.activations as activations
+import deep_learning_library.loss as loss
+import deep_learning_library.optimizers as optimizers
 
 from sklearn.datasets import load_iris
 from sklearn.model_selection import train_test_split
@@ -33,7 +32,7 @@ y_test = y_test.reshape((-1, 3, 1))
 if __name__ == "__main__":
     
     model = models.Sequential()
-    model.add(layers.Dense(16, activation = activations.ReLu(), input_shape=X_train.shape[1:], weight_init_method="relu"))
+    model.add(layers.Dense(16, activation=activations.ReLu(), input_shape=X_train.shape[1:], weight_init_method="relu"))
     model.add(layers.Dense(16, activation=activations.ReLu(), weight_init_method="relu"))
     model.add(layers.Dense(3, activation=activations.Sigmoid()))
     
